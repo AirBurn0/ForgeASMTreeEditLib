@@ -1,0 +1,36 @@
+plugins {
+	id 'java'
+}
+
+repositories {
+	mavenCentral()
+	maven {
+		name = "Velocity"
+		url = "https://nexus.velocitypowered.com/repository/maven-public/"
+	}
+}
+
+group 'airburn.fasmtel'
+version '1.0.0-1.7.10'
+
+compileJava.options.encoding = 'UTF-8'
+
+configurations {
+	provided
+}
+
+sourceSets {
+	main {
+		compileClasspath += configurations.provided
+	}
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_1_8
+	targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+	provided 'com.google.guava:guava:17.0'
+	provided 'net.minecraft:launchwrapper:1.12'
+}
