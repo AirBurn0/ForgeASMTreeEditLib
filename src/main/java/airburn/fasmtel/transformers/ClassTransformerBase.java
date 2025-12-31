@@ -31,11 +31,17 @@ public class ClassTransformerBase {
 	public ClassTransformerBase(byte[] basicClass, MethodData... methods) {
 		this(basicClass, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES, methods);
 	}
-
+	
 	public final byte[] transform() {
 		ClassNode cnode = new ClassNode();
 		ClassReader cr = new ClassReader(basicClass);
 		cr.accept(cnode, 0);
+		
+		if(!apply(cnode)) {
+			getLogger().warn("Error transforming class '" + cr.getClassName() + "' transformers will not be applied.");
+			return basicClass;
+		}
+		
 		for(MethodNode mnode: cnode.methods) {
 			for(MethodData method: methods) {
 				if(method.isVisited() || !method.isRightMethod(mnode)) {
@@ -57,6 +63,10 @@ public class ClassTransformerBase {
 		ClassWriter cw = new ClassWriter(flags);
 		cnode.accept(cw);
 		return cw.toByteArray();
+	}
+	
+	protected boolean apply(ClassNode cnode) {
+		return true;
 	}
 	
 	protected Logger getLogger() {
